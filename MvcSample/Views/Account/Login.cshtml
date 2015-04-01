@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+ @using (Html.BeginForm("Submit","Account"))
+   {
+        <div class="loginContainer">
+        <h2>Login</h2>
+            <label>Username : </label> @Html.TextBox("UserName")<br />
+            <label>Password : </label> @Html.Password("Password")<br />
+            <input type="submit" id="btnLogin" name="Login" />
+         </div>     
+   }
+<div style="height:30px;"></div>
+ <div class="loginContainer">
+        <h2>Ajax Login</h2>
+            <label>Username : </label><input type="text" id="txtUserName" /><br />
+            <label>Password : </label> <input type="password" id="txtPwd" /><br />
+            <input type="button" id="btnAjaxLogin" value="Submit" name="Login" />
+         </div>  
+
+<script src="~/Scripts/jquery-1.9.1.js"></script>
+<script>
+    $(document).ready(function () {
+        var baseUrl = "http://localhost:49455";
+        $('#btnAjaxLogin').click(function () {
+            var Obj = new Object();
+            Obj.UserName = $('#txtUserName').val();
+            Obj.Password = $('#txtPwd').val();
+           
+            $.ajax({
+                type: "POST",
+                contentType: "application/json;charset:utf-8",
+                dataType: "json",
+                url: baseUrl+ "/Account/AjaxSubmit",
+                data: JSON.stringify(Obj),               
+                success: function (msg,results) {                
+                    if (msg == "Home")                        
+                        window.location.href = baseUrl + "/Home";
+                    
+                },
+                error: function (msg,results) {
+                    alert('Error ');
+                }
+            });
+        });
+    });
+   
+</script> 

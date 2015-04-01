@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+@model System.Data.DataTable
+
+<div class="divAjax">
+    <div style="height:50px;">
+         <input id="btnAjax" value="AjaxLoad" type="button" />
+    </div>
+    <div>
+        <table id="divTable">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+                <tbody id="tbTemplate">
+                    <tr>
+                        <td>
+
+                        </td>
+                    </tr>
+                </tbody>
+           
+        </table>
+    </div>
+    <div style="height:50px;">&nbsp;</div>
+</div>
+<div class="divTable">
+     <div style="height:50px;"></div>
+     <div>
+          @using (Html.BeginForm("Submit","Home"))
+          {
+               <div style="height:50px;">
+                    <input id="btnSubmit" value="Load Data" type="submit" />
+                </div>
+              if(Model!=null)
+              {
+              <table border="1">
+                <thead>
+                    <tr>
+                        @foreach (System.Data.DataColumn col in Model.Columns) { 
+                            <th>@col.Caption</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                 @foreach(System.Data.DataRow row in Model.Rows) {
+                    <tr>
+                        @foreach (var cell in row.ItemArray) {
+                            <td>@cell.ToString()</td>
+                        } 
+                    </tr>
+                }         
+                </tbody>
+            </table>
+              }
+          }
+    </div>
+</div>
+<div>View Bag Data
+    @ViewBag.Data
+</div>
+<style>
+    #divTable {
+         border:1px solid #808080;
+    }       
+    #tbTemplate td {
+     text-align:center;
+     border:1px solid #808080;
+    }
+</style>
+<script src="~/Scripts/jquery-1.9.1.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+<script src="~/Scripts/jsrender.js"></script>
+
+<script id="renderTable" type="text/x-jsrender">
+    <tr>
+        <td>{{>Id}}</td>
+        <td>{{>Name}}</td>
+        <td>{{>Address}}</td>
+    </tr>
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var baseUrl = "http://localhost:49455";
+        var toSee = "";
+        $('#btnAjax').click(function () {
+            $.ajax({
+                type: "GET",
+                datatype: "json",
+                contenttype: "application/json;charset:utf-8",               
+                url: baseUrl+ "/Home/GetData",
+                success: function (msg,results) {
+                    alert('Success : ' + msg);
+                    $('#tbTemplate').html('');
+                    if (msg.length > 0) {                       
+                        toSee = $("#renderTable").render(msg);
+                        $("#tbTemplate").append(toSee);
+                    }
+                },
+                error: function (msg,results) {
+                    alert('Error : ' + JSON.stringify(msg));
+                }
+            });
+        });
+    });
+</script>
