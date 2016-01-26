@@ -8,6 +8,8 @@ namespace MvcSample
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            //Checking
+            //check pull request
         }
     }
 }
